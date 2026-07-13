@@ -107,12 +107,38 @@
 
     <script>
         const contractAddress = "0x3fa1A7926dC029bF7Fb2d6386EC94640532b351b";
+        const arcChainId = "0x4cef52"; // 5042002 in hex
         const abi = ["function buyCoffee(uint8 coffeeType) public payable"];
         let provider, signer, contract, selectedType, selectedPrice;
 
+        async function switchNetwork() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: arcChainId }],
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: arcChainId,
+                                chainName: 'Arc Testnet',
+                                rpcUrls: ['https://rpc.testnet.arc.network'],
+                                nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 },
+                                blockExplorerUrls: ['https://testnet.arcscan.app']
+                            }],
+                        });
+                    } catch (addError) { throw addError; }
+                } else { throw switchError; }
+            }
+        }
+
         async function connectWallet() {
-            if (window.ethereum) {
+            if (typeof window.ethereum !== 'undefined') {
                 try {
+                    await switchNetwork();
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     provider = new ethers.providers.Web3Provider(window.ethereum);
                     signer = provider.getSigner();
@@ -120,9 +146,17 @@
                     const btn = document.getElementById('connectBtn');
                     btn.innerText = accounts[0].substring(0,6) + "..." + accounts[0].substring(38);
                     btn.className = "bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg";
+                    console.log("Wallet connected:", accounts[0]);
                     return true;
-                } catch (e) { alert("Wallet connection failed!"); return false; }
-            } else { alert("Please install MetaMask or Rabby!"); return false; }
+                } catch (e) { 
+                    console.error(e);
+                    alert("Wallet error: " + e.message); 
+                    return false; 
+                }
+            } else { 
+                alert("Please install MetaMask or Rabby!"); 
+                return false; 
+            }
         }
 
         function selectCoffee(name, price, type) {
@@ -161,9 +195,9 @@
                     value: ethers.utils.parseEther(selectedPrice.toString()) 
                 });
                 
-                alert("Transaction sent to Arc Testnet! Waiting for confirmation...");
+                alert("Transaction sent! Wait for confirmation...");
                 await tx.wait();
-                alert("Payment Successful! ☕️ Enjoy your " + (selectedType==1?'Americano':selectedType==2?'Cappuccino':'Latte'));
+                alert("Payment Successful! ☕️");
                 backToMenu();
             } catch (e) {
                 alert("Payment Error: " + (e.data?.message || e.message));
