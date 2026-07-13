@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arc Coffee Pay</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
+    <!-- CDN های معتبر و جایگزین -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
@@ -31,6 +33,7 @@
             <h2 class="text-3xl font-bold text-center mb-2">Smart Coffee Menu</h2>
             <p class="text-center text-gray-600 mb-12">Fast payments with USDC on Arc Network</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Americano -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/americano.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
                     <div class="p-6 text-center">
@@ -39,6 +42,7 @@
                         <button onclick="selectCoffee('Americano', 5, 1)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
                     </div>
                 </div>
+                <!-- Cappuccino -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/cappuccino.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
                     <div class="p-6 text-center">
@@ -47,6 +51,7 @@
                         <button onclick="selectCoffee('Cappuccino', 8, 2)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
                     </div>
                 </div>
+                <!-- Latte -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/latte.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
                     <div class="p-6 text-center">
@@ -95,17 +100,23 @@
     </footer>
 
     <script>
+        // بررسی لود شدن کتابخانه
+        if (typeof ethers === 'undefined') {
+            alert("Warning: Ethers library could not be loaded. Please check your internet connection or refresh the page.");
+        }
+
         const contractAddress = "0x3fa1A7926dC029bF7Fb2d6386EC94640532b351b";
         const abi = ["function buyCoffee(uint8 coffeeType) public payable"];
         let provider, signer, contract, selectedType, selectedPrice;
 
         async function connectWallet() {
-            if (window.ethereum) {
+            if (typeof window.ethereum !== 'undefined') {
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    // استفاده از window.ethers برای اطمینان از دسترسی
+                    provider = new window.ethers.providers.Web3Provider(window.ethereum);
                     signer = provider.getSigner();
-                    contract = new ethers.Contract(contractAddress, abi, signer);
+                    contract = new window.ethers.Contract(contractAddress, abi, signer);
                     
                     const btn = document.getElementById('connectBtn');
                     btn.innerText = accounts[0].substring(0,6) + "..." + accounts[0].substring(38);
@@ -116,7 +127,7 @@
                     return false;
                 }
             } else {
-                alert("Please install MetaMask!");
+                alert("Please install MetaMask or Rabby!");
                 return false;
             }
         }
@@ -147,12 +158,13 @@
             }
 
             try {
+                // ارسال تراکنش با قیمت مشخص شده
                 const tx = await contract.buyCoffee(selectedType, { 
-                    value: ethers.utils.parseEther(selectedPrice.toString()) 
+                    value: window.ethers.utils.parseEther(selectedPrice.toString()) 
                 });
                 alert("Transaction sent! Wait for confirmation...");
                 await tx.wait();
-                alert("Success! ☕️");
+                alert("Success! ☕️ Enjoy your coffee!");
                 backToMenu();
             } catch (e) {
                 alert("Payment Error: " + e.message);
