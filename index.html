@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arc Coffee Pay</title>
-    <!-- CDN های معتبر و جایگزین -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
@@ -23,7 +21,7 @@
             <img src="images/arc-logo.jpg" alt="Arc Logo" class="w-10 h-10 rounded-full">
             <h1 class="text-2xl font-bold text-gray-800">Arc Coffee</h1>
         </div>
-        <button id="connectBtn" onclick="connectWallet()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition shadow-lg">
+        <button id="connectBtn" onclick="connectWallet()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition shadow-lg text-sm md:text-base">
             Connect Wallet
         </button>
     </header>
@@ -65,10 +63,11 @@
 
         <div id="paymentArea" class="hidden mt-16 bg-white p-8 rounded-3xl shadow-2xl max-w-lg mx-auto border-2 border-blue-100 text-center">
             <button onclick="backToMenu()" class="text-gray-500 mb-4 hover:text-black flex items-center gap-2">← Back to Menu</button>
-            <h3 class="text-2xl font-bold mb-4">Checkout Information</h3>
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Checkout Information</h3>
             <div id="coffeeDetails" class="mb-6 text-lg"></div>
             <div class="flex flex-col items-center mb-6 bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
                 <div id="qrcode" class="bg-white p-2 border-4 border-white shadow-sm"></div>
+                <p class="text-xs text-gray-400 mt-4 uppercase font-bold tracking-widest">Scan QR to pay on mobile</p>
             </div>
             <div class="space-y-4 text-left">
                 <div>
@@ -86,25 +85,42 @@
     </main>
 
     <footer class="mt-24 bg-gray-900 text-white py-12 px-8">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-800 pt-8">
-            <div class="flex items-center gap-3">
-                <img src="images/avatar.jpg" class="w-10 h-10 rounded-full border border-gray-700 shadow-sm">
-                <p class="text-gray-400">Project by <span class="text-white font-bold">amirrezaeian</span></p>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-gray-800 pt-8">
+            <!-- Left Side: Creator Info -->
+            <div class="flex flex-col space-y-4">
+                <div class="flex items-center gap-3">
+                    <img src="images/avatar.jpg" class="w-12 h-12 rounded-full border-2 border-gray-700 shadow-sm">
+                    <div>
+                        <p class="text-gray-400 text-sm">Project by</p>
+                        <p class="text-white font-bold text-lg">amirrezaeian</p>
+                    </div>
+                </div>
+                <div class="flex flex-col space-y-2">
+                    <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 hover:text-blue-300 transition text-sm flex items-center gap-2">
+                        <span>Twitter (X)</span>
+                    </a>
+                    <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="text-gray-400 hover:text-white transition text-sm flex items-center gap-2">
+                        <span>GitHub Repository</span>
+                    </a>
+                </div>
             </div>
-            <div class="flex gap-4 text-sm">
-                <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 font-bold">Twitter</a>
-                <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="text-gray-400">GitHub</a>
-                <a href="https://testnet.arcscan.app/" target="_blank" class="text-gray-400">Explorer</a>
+
+            <!-- Right Side: Resources -->
+            <div class="flex flex-col space-y-4">
+                <h4 class="text-white font-bold uppercase tracking-widest text-xs border-b border-gray-800 pb-2">Resources</h4>
+                <nav class="flex flex-col space-y-2 text-sm text-gray-400">
+                    <a href="https://faucet.circle.com/" target="_blank" class="hover:text-blue-400 transition">Circle Faucet</a>
+                    <a href="https://testnet.arcscan.app/" target="_blank" class="hover:text-blue-400 transition">Arc Explorer</a>
+                    <a href="https://docs.arc.io/" target="_blank" class="hover:text-blue-400 transition">Arc Documentation</a>
+                </nav>
             </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-8 text-center text-gray-600 text-xs">
+            © 2026 Arc Coffee Pay - Built for Arc Network Economic OS
         </div>
     </footer>
 
     <script>
-        // بررسی لود شدن کتابخانه
-        if (typeof ethers === 'undefined') {
-            alert("Warning: Ethers library could not be loaded. Please check your internet connection or refresh the page.");
-        }
-
         const contractAddress = "0x3fa1A7926dC029bF7Fb2d6386EC94640532b351b";
         const abi = ["function buyCoffee(uint8 coffeeType) public payable"];
         let provider, signer, contract, selectedType, selectedPrice;
@@ -113,31 +129,22 @@
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    // استفاده از window.ethers برای اطمینان از دسترسی
                     provider = new window.ethers.providers.Web3Provider(window.ethereum);
                     signer = provider.getSigner();
                     contract = new window.ethers.Contract(contractAddress, abi, signer);
-                    
                     const btn = document.getElementById('connectBtn');
                     btn.innerText = accounts[0].substring(0,6) + "..." + accounts[0].substring(38);
-                    btn.className = "bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg";
+                    btn.className = "bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg text-sm md:text-base";
                     return true;
-                } catch (e) {
-                    alert("Connection Error: " + e.message);
-                    return false;
-                }
-            } else {
-                alert("Please install MetaMask or Rabby!");
-                return false;
-            }
+                } catch (e) { alert("Error: " + e.message); return false; }
+            } else { alert("Install MetaMask!"); return false; }
         }
 
         function selectCoffee(name, price, type) {
             selectedType = type; selectedPrice = price;
             document.getElementById('menuView').classList.add('hidden');
             document.getElementById('paymentArea').classList.remove('hidden');
-            document.getElementById('coffeeDetails').innerHTML = `Item: <b>${name}</b><br><span class="text-2xl text-blue-600 font-bold">${price} USDC</span>`;
-            
+            document.getElementById('coffeeDetails').innerHTML = `Item: <b>${name}</b><br><span class="text-3xl text-blue-600 font-bold">${price} USDC</span>`;
             const payUrl = window.location.origin + window.location.pathname + `?type=${type}&name=${name}&price=${price}`;
             document.getElementById('payLink').innerText = payUrl;
             document.getElementById('qrcode').innerHTML = "";
@@ -152,29 +159,17 @@
         }
 
         async function payNow() {
-            if (!contract) {
-                const ok = await connectWallet();
-                if (!ok) return;
-            }
-
+            if (!contract) { if (!await connectWallet()) return; }
             try {
-                // ارسال تراکنش با قیمت مشخص شده
-                const tx = await contract.buyCoffee(selectedType, { 
-                    value: window.ethers.utils.parseEther(selectedPrice.toString()) 
-                });
+                const tx = await contract.buyCoffee(selectedType, { value: window.ethers.utils.parseEther(selectedPrice.toString()) });
                 alert("Transaction sent! Wait for confirmation...");
                 await tx.wait();
-                alert("Success! ☕️ Enjoy your coffee!");
+                alert("Success! Enjoy your coffee ☕️");
                 backToMenu();
-            } catch (e) {
-                alert("Payment Error: " + e.message);
-            }
+            } catch (e) { alert("Payment Error: " + e.message); }
         }
 
-        function copyText(id) {
-            navigator.clipboard.writeText(document.getElementById(id).innerText);
-            alert("Copied!");
-        }
+        function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); alert("Copied!"); }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
