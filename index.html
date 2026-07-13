@@ -21,7 +21,9 @@
             <img src="images/arc-logo.jpg" alt="Arc Logo" class="w-10 h-10 rounded-full">
             <h1 class="text-2xl font-bold text-gray-800">Arc Coffee</h1>
         </div>
-        <button id="connectBtn" onclick="connectWallet()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition shadow-lg">Connect Wallet</button>
+        <button id="connectBtn" onclick="connectWallet()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition shadow-lg">
+            Connect Wallet
+        </button>
     </header>
 
     <main class="max-w-6xl mx-auto mt-12 px-4">
@@ -32,41 +34,73 @@
                 <!-- Americano -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/americano.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
-                    <div class="p-6 text-center"><h3 class="text-xl font-bold mb-2">Americano</h3><p class="text-blue-600 font-bold text-2xl mb-4">5 USDC</p><button onclick="selectCoffee('Americano', 5, 1)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button></div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">Americano</h3>
+                        <p class="text-blue-600 font-bold text-2xl mb-4">5 USDC</p>
+                        <button onclick="selectCoffee('Americano', 5, 1)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
+                    </div>
                 </div>
                 <!-- Cappuccino -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/cappuccino.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
-                    <div class="p-6 text-center"><h3 class="text-xl font-bold mb-2">Cappuccino</h3><p class="text-blue-600 font-bold text-2xl mb-4">8 USDC</p><button onclick="selectCoffee('Cappuccino', 8, 2)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button></div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">Cappuccino</h3>
+                        <p class="text-blue-600 font-bold text-2xl mb-4">8 USDC</p>
+                        <button onclick="selectCoffee('Cappuccino', 8, 2)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
+                    </div>
                 </div>
                 <!-- Latte -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/latte.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
-                    <div class="p-6 text-center"><h3 class="text-xl font-bold mb-2">Latte Macchiato</h3><p class="text-blue-600 font-bold text-2xl mb-4">10 USDC</p><button onclick="selectCoffee('Latte', 10, 3)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button></div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">Latte Macchiato</h3>
+                        <p class="text-blue-600 font-bold text-2xl mb-4">10 USDC</p>
+                        <button onclick="selectCoffee('Latte', 10, 3)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="paymentArea" class="hidden mt-16 bg-white p-8 rounded-3xl shadow-2xl max-w-lg mx-auto border-2 border-blue-100">
+        <div id="paymentArea" class="hidden mt-16 bg-white p-8 rounded-3xl shadow-2xl max-w-lg mx-auto border-2 border-blue-100 text-center">
             <button onclick="backToMenu()" class="text-gray-500 mb-4 hover:text-black flex items-center gap-2">← Back to Menu</button>
-            <h3 class="text-2xl font-bold text-center mb-4">Checkout Information</h3>
-            <div id="coffeeDetails" class="text-center mb-6 text-lg"></div>
-            <div class="flex flex-col items-center mb-6 bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200"><div id="qrcode" class="bg-white p-2 border-4 border-white shadow-sm"></div></div>
-            <div class="space-y-4">
-                <div><label class="text-xs font-bold text-gray-500 uppercase">Payment Link:</label><div class="bg-gray-50 p-3 mt-1 rounded-lg flex justify-between items-center border"><code class="text-xs text-blue-800 truncate" id="payLink">Loading...</code><button onclick="copyText('payLink')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-xs font-bold whitespace-nowrap">Copy</button></div></div>
-                <button onclick="payNow()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-xl hover:bg-blue-700 transition shadow-lg mt-4">Confirm & Pay Now</button>
+            <h3 class="text-2xl font-bold mb-4">Checkout Information</h3>
+            <div id="coffeeDetails" class="mb-6 text-lg"></div>
+            <div class="flex flex-col items-center mb-6 bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
+                <div id="qrcode" class="bg-white p-2 border-4 border-white shadow-sm"></div>
+                <p class="text-xs text-gray-500 mt-4 uppercase font-bold tracking-widest">Scan to pay on mobile</p>
+            </div>
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Payment Link:</label>
+                    <div class="bg-gray-50 p-3 mt-1 rounded-lg flex justify-between items-center border">
+                        <code class="text-xs text-blue-800 truncate" id="payLink">Loading...</code>
+                        <button onclick="copyText('payLink')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-xs font-bold whitespace-nowrap">Copy</button>
+                    </div>
+                </div>
+                <button id="payNowBtn" onclick="payNow()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-xl hover:bg-blue-700 transition shadow-lg mt-4">
+                    Confirm & Pay Now
+                </button>
             </div>
         </div>
     </main>
 
     <footer class="mt-24 bg-gray-900 text-white py-12 px-8">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-800 pt-8">
-            <div class="flex items-center gap-3">
-                <img src="images/avatar.jpg" class="w-8 h-8 rounded-full border border-gray-700 shadow-sm">
-                <p class="text-gray-400">Project by <span class="text-white font-bold">amirrezaeian</span></p>
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="images/avatar.jpg" class="w-10 h-10 rounded-full border border-gray-700 shadow-sm">
+                    <p class="text-gray-400">Project by <span class="text-white font-bold">amirrezaeian</span></p>
+                </div>
+                <div class="flex gap-4">
+                    <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 hover:text-blue-300 transition text-sm font-bold">Twitter (X)</a>
+                    <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="text-gray-400 hover:text-white transition text-sm font-bold">GitHub Repo</a>
+                </div>
             </div>
-            <div class="flex gap-4 text-sm text-gray-400">
-                <a href="https://x.com/amirrezaeian75" target="_blank" class="hover:text-blue-400">Twitter</a> | <a href="https://faucet.circle.com/" target="_blank" class="hover:text-blue-400">Faucet</a>
+            <div class="grid grid-cols-1 gap-2 text-sm">
+                <h4 class="font-bold text-gray-500 uppercase tracking-widest text-xs mb-2">Arc Resources</h4>
+                <a href="https://faucet.circle.com/" target="_blank" class="text-gray-300 hover:text-blue-400 transition">Circle Faucet</a>
+                <a href="https://testnet.arcscan.app/" target="_blank" class="text-gray-300 hover:text-blue-400 transition">Arc Explorer</a>
+                <a href="https://docs.arc.io/" target="_blank" class="text-gray-300 hover:text-blue-400 transition">Arc Documentation</a>
             </div>
         </div>
     </footer>
@@ -78,27 +112,78 @@
 
         async function connectWallet() {
             if (window.ethereum) {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(contractAddress, abi, signer);
-                document.getElementById('connectBtn').innerText = accounts[0].substring(0,6) + "...";
-            }
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(contractAddress, abi, signer);
+                    const btn = document.getElementById('connectBtn');
+                    btn.innerText = accounts[0].substring(0,6) + "..." + accounts[0].substring(38);
+                    btn.className = "bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg";
+                    return true;
+                } catch (e) { alert("Wallet connection failed!"); return false; }
+            } else { alert("Please install MetaMask or Rabby!"); return false; }
         }
+
         function selectCoffee(name, price, type) {
             selectedType = type; selectedPrice = price;
             document.getElementById('menuView').classList.add('hidden');
             document.getElementById('paymentArea').classList.remove('hidden');
-            document.getElementById('coffeeDetails').innerHTML = `Item: <b>${name}</b><br><span class="text-2xl text-blue-600 font-bold">${price} USDC</span>`;
-            const payUrl = window.location.href.split('?')[0] + `?type=${type}&name=${name}&price=${price}`;
+            document.getElementById('coffeeDetails').innerHTML = `You are buying: <b>${name}</b><br><span class="text-3xl text-blue-600 font-bold">${price} USDC</span>`;
+            
+            const payUrl = window.location.origin + window.location.pathname + `?type=${type}&name=${name}&price=${price}`;
             document.getElementById('payLink').innerText = payUrl;
             document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { text: payUrl, width: 180, height: 180 });
+            new QRCode(document.getElementById("qrcode"), { text: payUrl, width: 200, height: 200 });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        function backToMenu() { document.getElementById('menuView').classList.remove('hidden'); document.getElementById('paymentArea').classList.add('hidden'); }
-        async function payNow() { if (!contract) await connectWallet(); const tx = await contract.buyCoffee(selectedType, { value: ethers.utils.parseEther(selectedPrice.toString()) }); await tx.wait(); alert("Success! ☕️"); }
-        function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); alert("Copied!"); }
-        window.onload = () => { const p = new URLSearchParams(window.location.search); if (p.has('type')) selectCoffee(p.get('name'), p.get('price'), p.get('type')); };
+
+        function backToMenu() {
+            document.getElementById('menuView').classList.remove('hidden');
+            document.getElementById('paymentArea').classList.add('hidden');
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+
+        async function payNow() {
+            if (!contract) {
+                const connected = await connectWallet();
+                if (!connected) return;
+            }
+
+            const btn = document.getElementById('payNowBtn');
+            const originalText = btn.innerText;
+            
+            try {
+                btn.innerText = "Processing Transaction...";
+                btn.disabled = true;
+                
+                const tx = await contract.buyCoffee(selectedType, { 
+                    value: ethers.utils.parseEther(selectedPrice.toString()) 
+                });
+                
+                alert("Transaction sent to Arc Testnet! Waiting for confirmation...");
+                await tx.wait();
+                alert("Payment Successful! ☕️ Enjoy your " + (selectedType==1?'Americano':selectedType==2?'Cappuccino':'Latte'));
+                backToMenu();
+            } catch (e) {
+                alert("Payment Error: " + (e.data?.message || e.message));
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function copyText(id) {
+            navigator.clipboard.writeText(document.getElementById(id).innerText);
+            alert("Copied!");
+        }
+
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('type')) {
+                selectCoffee(params.get('name'), params.get('price'), params.get('type'));
+            }
+        };
     </script>
 </body>
 </html>
