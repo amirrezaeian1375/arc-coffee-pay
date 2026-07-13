@@ -31,7 +31,6 @@
             <h2 class="text-3xl font-bold text-center mb-2">Smart Coffee Menu</h2>
             <p class="text-center text-gray-600 mb-12">Fast payments with USDC on Arc Network</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Americano -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/americano.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
                     <div class="p-6 text-center">
@@ -40,7 +39,6 @@
                         <button onclick="selectCoffee('Americano', 5, 1)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
                     </div>
                 </div>
-                <!-- Cappuccino -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/cappuccino.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
                     <div class="p-6 text-center">
@@ -49,7 +47,6 @@
                         <button onclick="selectCoffee('Cappuccino', 8, 2)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
                     </div>
                 </div>
-                <!-- Latte -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
                     <div class="relative h-64 overflow-hidden"><img src="images/latte.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
                     <div class="p-6 text-center">
@@ -67,7 +64,6 @@
             <div id="coffeeDetails" class="mb-6 text-lg"></div>
             <div class="flex flex-col items-center mb-6 bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
                 <div id="qrcode" class="bg-white p-2 border-4 border-white shadow-sm"></div>
-                <p class="text-xs text-gray-500 mt-4 uppercase font-bold tracking-widest">Scan to pay on mobile</p>
             </div>
             <div class="space-y-4 text-left">
                 <div>
@@ -86,76 +82,42 @@
 
     <footer class="mt-24 bg-gray-900 text-white py-12 px-8">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-800 pt-8">
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <img src="images/avatar.jpg" class="w-10 h-10 rounded-full border border-gray-700 shadow-sm">
-                    <p class="text-gray-400">Project by <span class="text-white font-bold">amirrezaeian</span></p>
-                </div>
-                <div class="flex gap-4">
-                    <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 hover:text-blue-300 transition text-sm font-bold">Twitter (X)</a>
-                    <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="text-gray-400 hover:text-white transition text-sm font-bold">GitHub Repo</a>
-                </div>
+            <div class="flex items-center gap-3">
+                <img src="images/avatar.jpg" class="w-10 h-10 rounded-full border border-gray-700 shadow-sm">
+                <p class="text-gray-400">Project by <span class="text-white font-bold">amirrezaeian</span></p>
             </div>
-            <div class="grid grid-cols-1 gap-2 text-sm">
-                <h4 class="font-bold text-gray-500 uppercase tracking-widest text-xs mb-2">Arc Resources</h4>
-                <a href="https://faucet.circle.com/" target="_blank" class="text-gray-300 hover:text-blue-400 transition">Circle Faucet</a>
-                <a href="https://testnet.arcscan.app/" target="_blank" class="text-gray-300 hover:text-blue-400 transition">Arc Explorer</a>
-                <a href="https://docs.arc.io/" target="_blank" class="text-gray-300 hover:text-blue-400 transition">Arc Documentation</a>
+            <div class="flex gap-4 text-sm">
+                <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 font-bold">Twitter</a>
+                <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="text-gray-400">GitHub</a>
+                <a href="https://testnet.arcscan.app/" target="_blank" class="text-gray-400">Explorer</a>
             </div>
         </div>
     </footer>
 
     <script>
         const contractAddress = "0x3fa1A7926dC029bF7Fb2d6386EC94640532b351b";
-        const arcChainId = "0x4cef52"; // 5042002 in hex
         const abi = ["function buyCoffee(uint8 coffeeType) public payable"];
         let provider, signer, contract, selectedType, selectedPrice;
 
-        async function switchNetwork() {
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: arcChainId }],
-                });
-            } catch (switchError) {
-                if (switchError.code === 4902) {
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: arcChainId,
-                                chainName: 'Arc Testnet',
-                                rpcUrls: ['https://rpc.testnet.arc.network'],
-                                nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 },
-                                blockExplorerUrls: ['https://testnet.arcscan.app']
-                            }],
-                        });
-                    } catch (addError) { throw addError; }
-                } else { throw switchError; }
-            }
-        }
-
         async function connectWallet() {
-            if (typeof window.ethereum !== 'undefined') {
+            if (window.ethereum) {
                 try {
-                    await switchNetwork();
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     provider = new ethers.providers.Web3Provider(window.ethereum);
                     signer = provider.getSigner();
                     contract = new ethers.Contract(contractAddress, abi, signer);
+                    
                     const btn = document.getElementById('connectBtn');
                     btn.innerText = accounts[0].substring(0,6) + "..." + accounts[0].substring(38);
                     btn.className = "bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg";
-                    console.log("Wallet connected:", accounts[0]);
                     return true;
-                } catch (e) { 
-                    console.error(e);
-                    alert("Wallet error: " + e.message); 
-                    return false; 
+                } catch (e) {
+                    alert("Connection Error: " + e.message);
+                    return false;
                 }
-            } else { 
-                alert("Please install MetaMask or Rabby!"); 
-                return false; 
+            } else {
+                alert("Please install MetaMask!");
+                return false;
             }
         }
 
@@ -163,12 +125,12 @@
             selectedType = type; selectedPrice = price;
             document.getElementById('menuView').classList.add('hidden');
             document.getElementById('paymentArea').classList.remove('hidden');
-            document.getElementById('coffeeDetails').innerHTML = `You are buying: <b>${name}</b><br><span class="text-3xl text-blue-600 font-bold">${price} USDC</span>`;
+            document.getElementById('coffeeDetails').innerHTML = `Item: <b>${name}</b><br><span class="text-2xl text-blue-600 font-bold">${price} USDC</span>`;
             
             const payUrl = window.location.origin + window.location.pathname + `?type=${type}&name=${name}&price=${price}`;
             document.getElementById('payLink').innerText = payUrl;
             document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { text: payUrl, width: 200, height: 200 });
+            new QRCode(document.getElementById("qrcode"), { text: payUrl, width: 180, height: 180 });
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -180,30 +142,20 @@
 
         async function payNow() {
             if (!contract) {
-                const connected = await connectWallet();
-                if (!connected) return;
+                const ok = await connectWallet();
+                if (!ok) return;
             }
 
-            const btn = document.getElementById('payNowBtn');
-            const originalText = btn.innerText;
-            
             try {
-                btn.innerText = "Processing Transaction...";
-                btn.disabled = true;
-                
                 const tx = await contract.buyCoffee(selectedType, { 
                     value: ethers.utils.parseEther(selectedPrice.toString()) 
                 });
-                
                 alert("Transaction sent! Wait for confirmation...");
                 await tx.wait();
-                alert("Payment Successful! ☕️");
+                alert("Success! ☕️");
                 backToMenu();
             } catch (e) {
-                alert("Payment Error: " + (e.data?.message || e.message));
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
+                alert("Payment Error: " + e.message);
             }
         }
 
@@ -214,9 +166,7 @@
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('type')) {
-                selectCoffee(params.get('name'), params.get('price'), params.get('type'));
-            }
+            if (params.has('type')) selectCoffee(params.get('name'), params.get('price'), params.get('type'));
         };
     </script>
 </body>
