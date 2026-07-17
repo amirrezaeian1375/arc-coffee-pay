@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arc Coffee Pay</title>
+    <title>Coffee Pay - Built on Arc</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" type="application/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,14 +12,24 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
         .coffee-card img { transition: transform 0.3s ease; }
         .coffee-card:hover img { transform: scale(1.05); }
-        .logo-overlay { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: rgba(255, 255, 255, 0.8); border-radius: 50%; padding: 5px; border: 1px solid #ddd; }
+        .logo-overlay { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            width: 40px; 
+            height: 40px; 
+            background: rgba(255, 255, 255, 0.8); 
+            border-radius: 50%; 
+            padding: 5px; 
+            border: 1px solid #ddd; 
+        }
     </style>
 </head>
 <body class="text-gray-900">
     <header class="bg-white shadow-sm p-4 flex justify-between items-center px-8 sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <img src="images/arc-logo.jpg" alt="Arc Logo" class="w-10 h-10 rounded-full">
-            <h1 class="text-2xl font-bold text-gray-800">Arc Coffee</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Coffee Pay</h1>
         </div>
         <button id="connectBtn" onclick="connectWallet()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition shadow-lg text-sm md:text-base">
             Connect Wallet
@@ -28,30 +38,42 @@
 
     <main class="max-w-6xl mx-auto mt-12 px-4">
         <div id="menuView">
-            <h2 class="text-3xl font-bold text-center mb-2">Smart Coffee Menu</h2>
-            <p class="text-center text-gray-600 mb-12">Fast payments with USDC on Arc Network</p>
+            <h2 class="text-3xl font-bold text-center mb-2">Coffee Pay</h2>
+            <p class="text-center text-gray-600 mb-12 italic text-sm">Built on Arc Network™</p>
+            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Americano -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
-                    <div class="relative h-64 overflow-hidden"><img src="images/americano.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="images/americano.jpg" alt="Americano" class="w-full h-full object-cover">
+                        <img src="images/arc-logo.jpg" alt="Arc Logo" class="logo-overlay">
+                    </div>
                     <div class="p-6 text-center">
                         <h3 class="text-xl font-bold mb-2">Americano</h3>
                         <p class="text-blue-600 font-bold text-2xl mb-4">5 USDC</p>
                         <button onclick="selectCoffee('Americano', 5, 1)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
                     </div>
                 </div>
+
                 <!-- Cappuccino -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
-                    <div class="relative h-64 overflow-hidden"><img src="images/cappuccino.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="images/cappuccino.jpg" alt="Cappuccino" class="w-full h-full object-cover">
+                        <img src="images/arc-logo.jpg" alt="Arc Logo" class="logo-overlay">
+                    </div>
                     <div class="p-6 text-center">
                         <h3 class="text-xl font-bold mb-2">Cappuccino</h3>
                         <p class="text-blue-600 font-bold text-2xl mb-4">8 USDC</p>
                         <button onclick="selectCoffee('Cappuccino', 8, 2)" class="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition">Select & Pay</button>
                     </div>
                 </div>
+
                 <!-- Latte -->
                 <div class="coffee-card bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 flex flex-col">
-                    <div class="relative h-64 overflow-hidden"><img src="images/latte.jpg" class="w-full h-full object-cover"><img src="images/arc-logo.jpg" class="logo-overlay"></div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="images/latte.jpg" alt="Latte" class="w-full h-full object-cover">
+                        <img src="images/arc-logo.jpg" alt="Arc Logo" class="logo-overlay">
+                    </div>
                     <div class="p-6 text-center">
                         <h3 class="text-xl font-bold mb-2">Latte Macchiato</h3>
                         <p class="text-blue-600 font-bold text-2xl mb-4">10 USDC</p>
@@ -61,13 +83,14 @@
             </div>
         </div>
 
+        <!-- Checkout View -->
         <div id="paymentArea" class="hidden mt-16 bg-white p-8 rounded-3xl shadow-2xl max-w-lg mx-auto border-2 border-blue-100 text-center">
             <button onclick="backToMenu()" class="text-gray-500 mb-4 hover:text-black flex items-center gap-2">← Back to Menu</button>
-            <h3 class="text-2xl font-bold mb-4 text-gray-800">Checkout Information</h3>
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Checkout</h3>
             <div id="coffeeDetails" class="mb-6 text-lg"></div>
             <div class="flex flex-col items-center mb-6 bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
                 <div id="qrcode" class="bg-white p-2 border-4 border-white shadow-sm"></div>
-                <p class="text-xs text-gray-400 mt-4 uppercase font-bold tracking-widest">Scan QR to pay on mobile</p>
+                <p class="text-xs text-gray-400 mt-4 uppercase font-bold tracking-widest">Scan to pay on mobile</p>
             </div>
             <div class="space-y-4 text-left">
                 <div>
@@ -86,26 +109,20 @@
 
     <footer class="mt-24 bg-gray-900 text-white py-12 px-8">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-gray-800 pt-8">
-            <!-- Left Side: Creator Info -->
             <div class="flex flex-col space-y-4">
                 <div class="flex items-center gap-3">
-                    <img src="images/avatar.jpg" class="w-12 h-12 rounded-full border-2 border-gray-700 shadow-sm">
+                    <img src="images/avatar.jpg" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-gray-700 shadow-sm">
                     <div>
                         <p class="text-gray-400 text-sm">Project by</p>
                         <p class="text-white font-bold text-lg">amirrezaeian</p>
                     </div>
                 </div>
-                <div class="flex flex-col space-y-2">
-                    <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 hover:text-blue-300 transition text-sm flex items-center gap-2">
-                        <span>Twitter (X)</span>
-                    </a>
-                    <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="text-gray-400 hover:text-white transition text-sm flex items-center gap-2">
-                        <span>GitHub Repository</span>
-                    </a>
+                <div class="flex flex-col space-y-2 text-sm text-gray-400">
+                    <a href="https://x.com/amirrezaeian75" target="_blank" class="text-blue-400 hover:text-blue-300 transition">Twitter (X)</a>
+                    <a href="https://github.com/amirrezaeian1375/arc-coffee-pay" target="_blank" class="hover:text-white transition">GitHub Repository</a>
                 </div>
             </div>
 
-            <!-- Right Side: Resources -->
             <div class="flex flex-col space-y-4">
                 <h4 class="text-white font-bold uppercase tracking-widest text-xs border-b border-gray-800 pb-2">Resources</h4>
                 <nav class="flex flex-col space-y-2 text-sm text-gray-400">
@@ -115,8 +132,9 @@
                 </nav>
             </div>
         </div>
-        <div class="max-w-6xl mx-auto mt-8 text-center text-gray-600 text-xs">
-            © 2026 Arc Coffee Pay - Built for Arc Network Economic OS
+        <div class="max-w-6xl mx-auto mt-12 text-center text-gray-600 text-[10px] leading-relaxed">
+            Arc is a trademark of Circle Internet Group, Inc. and/or its affiliates.<br>
+            This application is an independent project and is not formally affiliated with or endorsed by Circle.
         </div>
     </footer>
 
